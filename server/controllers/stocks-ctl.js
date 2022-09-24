@@ -4,9 +4,9 @@ import Ticker from "../models/Ticker.js";
 
 export const getRecentStocks = async (req, res) => {
     try {
-        const priceSourceId = req.params.priceSourceId;
-        const ticker = req.params.ticker;
-        const recentStockList = await Stock.find();
+        const _priceSourceId = req.params.priceSourceId;
+        const _ticker = req.params.ticker;
+        const recentStockList = await Stock.find({ ticker: _ticker, source: _priceSourceId }).sort({updatedDateTime: -1});
 
         res.status(200).send(recentStockList);
     } catch (error) {

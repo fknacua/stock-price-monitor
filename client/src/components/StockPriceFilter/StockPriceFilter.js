@@ -1,50 +1,48 @@
 import React from "react";
 
-import { Box, InputLabel, MenuItem, FormControl, Select } from '@mui/material/';
+import { useSelector } from "react-redux";
+import { InputLabel, MenuItem, FormControl, Select } from '@mui/material/';
+import { Button, Grid } from "@material-ui/core";
 
 const App = (props) => {
-    const [priceSource, setPriceSource] = React.useState('');
-    const [ticker, setTicker] = React.useState('');
-
-    const handleTickerChange = (event) => {
-        setTicker(event.target.value);
-    };
-    const handlePriceSourceChange = (event) => {
-        setPriceSource(event.target.value);
-    };
+    const { ticker, priceSource, handlePriceSourceChange, handleTickerChange, handleSubmit } = props;
+    const priceSourceList = useSelector((state) => state.appParams.priceSource);
+    const tickerList = useSelector((state) => state.appParams.ticker);
 
     return (
-        <div>
-            <FormControl sx={{ m: 1, minWidth: 300 }} size="small">
-                <InputLabel id="lbl_source">Price Source</InputLabel>
-                <Select
-                    labelId="lbl_source"
-                    id="slc_source"
-                    label="Price Source"
-                    value={priceSource}
-                    onChange={handlePriceSourceChange}
-                >
-                    <MenuItem value={""}><em>None</em></MenuItem>
-                    <MenuItem value={"yahoo"}>Yahoo! Finance</MenuItem>
-                    <MenuItem value={"twelve"}>Twelve Data</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl sx={{ m: 1, minWidth: 300 }} size="small">
-                <InputLabel id="lbl_ticker">Ticker</InputLabel>
-                <Select
-                    labelId="demo-lbl_ticker-select-label"
-                    id="slc_ticker"
-                    label="Ticker"
-                    value={ticker}
-                    onChange={handleTickerChange}
-                >
-                    <MenuItem value={""}></MenuItem>    
-                    <MenuItem value={"GOOG"}>Google</MenuItem>
-                    <MenuItem value={"TSLA"}>Tesla</MenuItem>
-                    <MenuItem value={"AMZN"}>Amazon</MenuItem>
-                </Select>
-            </FormControl>
-        </div>
+        <Grid container justifyContent="space-evenly" align-items="stretch" spacing="2">
+            <Grid item sm={12} lg={6}>
+                <FormControl fullWidth size="small">
+                    <InputLabel id="lbl_source">Price Source</InputLabel>
+                    <Select
+                        labelId="lbl_source"
+                        id="slc_source"
+                        label="Price Source"
+                        value={priceSource}
+                        onChange={handlePriceSourceChange}
+                    >
+                        <MenuItem value={""}><em>None</em></MenuItem>
+                        { priceSourceList.map((source) => <MenuItem key={source._id} value={source.priceSourceId}>{source.priceSourceName}</MenuItem>) }
+                    </Select>
+                </FormControl>
+            </Grid>
+            <Grid item sm={12} lg={6}>
+                <FormControl fullWidth size="small">
+                    <InputLabel id="lbl_ticker">Ticker</InputLabel>
+                    <Select
+                        labelId="demo-lbl_ticker-select-label"
+                        id="slc_ticker"
+                        label="Ticker"
+                        value={ticker}
+                        onChange={handleTickerChange}
+                    >
+                        <MenuItem value={""}><em>None</em></MenuItem>
+                        { tickerList.map((ticker) => (<MenuItem key={ticker._id} value={ticker.tickerId}>{ticker.tickerName}</MenuItem>)) }
+                    </Select>
+                </FormControl>
+            </Grid>
+            <Button variant="contained" color="primary" size="large" disabled={!ticker || !priceSource} onClick={handleSubmit}>Submit</Button>
+        </Grid>
     )
 }
 

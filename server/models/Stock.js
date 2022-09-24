@@ -6,7 +6,8 @@ const stockSchema = mongoose.Schema({
     updatedDateTime: {
         type: Date,
         value: new Date()
-    }
+    }, 
+    source: String
 })
 
 const Stock = mongoose.model("Stock", stockSchema);

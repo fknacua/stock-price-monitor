@@ -1,11 +1,11 @@
 import React from "react";
 
-
-import { Table, TableContainer, TableCell, TableBody, TableHead, TableRow, Paper } from "@material-ui/core"
+import { useSelector } from "react-redux";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
 import * as moment from 'moment';
 
-const StockPriceDisplay = () => {
-    const [stockDataList, setState] = React.useState([]);
+const StockPriceDisplay = (props) => {
+    const stockDataList = useSelector((state) => state.stocks);
 
     function formatTime(value) {
         return moment(value).format("DD MMM YYYY, hh:mm:ss A");
@@ -15,7 +15,7 @@ const StockPriceDisplay = () => {
         return value.toFixed(2);
     }
     
-    return (
+    return stockDataList && stockDataList.length ? (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
@@ -26,7 +26,7 @@ const StockPriceDisplay = () => {
                 </TableHead>
                 <TableBody>
                     {stockDataList.map((stockData) => (
-                        <TableRow key={stockData.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                        <TableRow key={stockData._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                             <TableCell component="th" scope="row">
                                 {formatTime(stockData.updatedDateTime)}
                             </TableCell>
@@ -38,7 +38,7 @@ const StockPriceDisplay = () => {
                 </TableBody>
             </Table>
         </TableContainer>
-    )
+    ) : <Typography>Please select a source and ticker.</Typography>
 }
 
 export default StockPriceDisplay;
