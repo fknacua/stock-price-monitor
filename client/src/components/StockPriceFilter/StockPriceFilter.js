@@ -1,11 +1,10 @@
 import React from "react";
-
 import { useSelector } from "react-redux";
 import { InputLabel, MenuItem, FormControl, Select } from '@mui/material/';
 import { Button, Grid } from "@material-ui/core";
 
 const App = (props) => {
-    const { ticker, priceSource, handlePriceSourceChange, handleTickerChange, handleSubmit } = props;
+    const { ticker, priceSource, handlePriceSourceChange, handleTickerChange, handleSubmit, hasUpdates } = props;
     const priceSourceList = useSelector((state) => state.appParams.priceSource);
     const tickerList = useSelector((state) => state.appParams.ticker);
 
@@ -41,7 +40,16 @@ const App = (props) => {
                     </Select>
                 </FormControl>
             </Grid>
-            <Button variant="contained" color="primary" size="large" disabled={!ticker || !priceSource} onClick={handleSubmit}>Submit</Button>
+            <Grid item container sm={12} lg={6} spacing={2}>
+                <Grid item>
+                    <Button variant="contained" color="primary" size="large" disabled={!ticker || !priceSource} onClick={handleSubmit}>Submit</Button>
+                </Grid>
+                { hasUpdates ? 
+                    <Grid item>
+                        <Button variant="contained" color="primary" size="large" disabled={!ticker || !priceSource} onClick={handleSubmit}>Refresh</Button>
+                    </Grid>
+                : null }
+            </Grid>
         </Grid>
     )
 }

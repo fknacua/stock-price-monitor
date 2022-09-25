@@ -9,6 +9,7 @@ import StockPriceDisplay from "./components/StockPriceDisplay/StockPriceDisplay"
 import StockPriceFilter from "./components/StockPriceFilter/StockPriceFilter";
 import { getStocks } from "./actions/stocks.act";
 import { getPriceSources, getTickers } from "./actions/params.act";
+import io from "socket.io-client";
 
 
 const darkTheme = createTheme({
@@ -23,10 +24,14 @@ const Item = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
 }));
 
+let socket;
+
 const App = () => {
+    const ENDPOINT = "localhost:5000";
     const dispatch = useDispatch();
     const [priceSource, setPriceSource] = useState('');
     const [ticker, setTicker] = useState('');
+    const [hasUpdates, setHasUpdates] = useState(false);
 
     const handleTickerChange = (event) => {
         setTicker(event.target.value);
@@ -38,14 +43,25 @@ const App = () => {
         console.log("submit this data: ", [ticker, priceSource] );
 
         if (ticker && priceSource) {
+            setHasUpdates(false);
+            socket.emit("SEARCH");
             dispatch(getStocks(ticker, priceSource));
         }
     }
 
     useEffect(() => {
         dispatch(getPriceSources());
-        dispatch(getTickers())
+        dispatch(getTickers());
     }, [dispatch]);
+
+    useEffect(() => {
+        socket = io(ENDPOINT);
+
+        socket.on("UPDATES_READY", ({ hasUpdates }) => {
+            console.log("Has Updates flag received in FE");
+            setHasUpdates(hasUpdates);
+        });
+    }, [ENDPOINT]);
 
     return (
         <ThemeProvider theme={darkTheme}>
@@ -63,7 +79,8 @@ const App = () => {
                                     priceSource={priceSource} 
                                     handlePriceSourceChange={handlePriceSourceChange}
                                     handleTickerChange={handleTickerChange}
-                                    handleSubmit={handleSubmit} />
+                                    handleSubmit={handleSubmit}
+                                    hasUpdates={hasUpdates} />
                                 </Item>
                             <Item>
                                 <StockPriceDisplay />

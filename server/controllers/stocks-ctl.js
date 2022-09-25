@@ -6,7 +6,7 @@ export const getRecentStocks = async (req, res) => {
     try {
         const _priceSourceId = req.params.priceSourceId;
         const _ticker = req.params.ticker;
-        const recentStockList = await Stock.find({ ticker: _ticker, source: _priceSourceId }).sort({updatedDateTime: -1});
+        const recentStockList = await Stock.find({ ticker: _ticker, source: _priceSourceId }).sort({updatedDateTime: -1}).limit(5);
 
         res.status(200).send(recentStockList);
     } catch (error) {
