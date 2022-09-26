@@ -1,10 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
 import * as moment from 'moment';
+import { useAppSelector } from "../../redux/hooks";
 
 const StockPriceDisplay = (props) => {
-    const stockDataList = useSelector((state) => state.stocks);
+    const stockDataList = useAppSelector((state) => state.stocks);
 
     function formatTime(value) {
         return moment(value).format("DD MMM YYYY, hh:mm:ss A");
@@ -16,7 +16,7 @@ const StockPriceDisplay = (props) => {
     
     return stockDataList && stockDataList.length ? (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table data-testid="tbl_display" sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell>Time</TableCell>

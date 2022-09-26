@@ -1,16 +1,14 @@
-import cors from 'cors';
-import express from 'express';
 import mongoose from 'mongoose';
 import { Server } from "socket.io";
 import Stock from './models/Stock.js';
-import stocksRoutes from './routes/stocks-rts.js';
+import createServer from './utils/server.js';
+import dotenv from "dotenv";
 
-const app = express();
-app.use(cors());
-app.use("/stocks", stocksRoutes);
+const app = createServer();
+dotenv.config();
 let server;
 
-const CONNECTION_URL = "mongodb+srv://admin:testadmin123@cluster0.vjg3w0e.mongodb.net/?retryWrites=true&w=majority";
+const CONNECTION_URL = process.env.CONNECTION_URL;
 const PORT = process.env.PORT || 5000;
 
 mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true, dbName: "stock_monitor" })

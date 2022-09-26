@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { AppBar, Container, Grow, Typography } from "@material-ui/core";
 import CssBaseline from '@mui/material/CssBaseline';
 import Paper from '@mui/material/Paper';
@@ -7,9 +7,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Stack, styled } from '@mui/system';
 import StockPriceDisplay from "./components/StockPriceDisplay/StockPriceDisplay";
 import StockPriceFilter from "./components/StockPriceFilter/StockPriceFilter";
-import { getStocks } from "./actions/stocks.act";
-import { getPriceSources, getTickers } from "./actions/params.act";
+import { getStocks } from "./redux/actions/stocks.act";
+import { getPriceSources, getTickers } from "./redux/actions/params.act";
 import io from "socket.io-client";
+import { useAppDispatch } from "./redux/hooks";
+import { WS_ENDPOINT } from "./constants/app-static-constants";
 
 
 const darkTheme = createTheme({
@@ -27,8 +29,8 @@ const Item = styled(Paper)(({ theme }) => ({
 let socket;
 
 const App = () => {
-    const ENDPOINT = "localhost:5000";
-    const dispatch = useDispatch();
+    const ENDPOINT = WS_ENDPOINT;
+    const dispatch = useAppDispatch();
     const [priceSource, setPriceSource] = useState('');
     const [ticker, setTicker] = useState('');
     const [hasUpdates, setHasUpdates] = useState(false);
@@ -68,22 +70,22 @@ const App = () => {
             <CssBaseline />
             <Container maxWidth="md">
                 <AppBar position="static">
-                    <Typography variant="h4" align="center">Stock Price Monitor</Typography>
+                    <Typography data-testid="appBar" variant="h4" align="center">Stock Price Monitor</Typography>
                 </AppBar>
                 <Grow in>
                     <Container>
                         <Stack spacing={2}>
                             <Item>
-                                <StockPriceFilter 
-                                    ticker={ticker} 
-                                    priceSource={priceSource} 
+                                <StockPriceFilter
+                                    ticker={ticker}
+                                    priceSource={priceSource}
                                     handlePriceSourceChange={handlePriceSourceChange}
                                     handleTickerChange={handleTickerChange}
                                     handleSubmit={handleSubmit}
                                     hasUpdates={hasUpdates} />
-                                </Item>
+                            </Item>
                             <Item>
-                                <StockPriceDisplay />
+                                <StockPriceDisplay/>
                             </Item>
                         </Stack>
                     </Container>

@@ -1,4 +1,4 @@
-import * as apiServices from '../services/app.service';
+import * as apiServices from '../../services/app.service';
 
 export const getPriceSources = () => async (dispatch) => {
     try {
